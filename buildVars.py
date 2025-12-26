@@ -24,7 +24,7 @@ addon_info = AddonInfo(
 	addon_description=_("""Replaces NVDA's voice announcements for AC power status changes
 with sound notifications."""),
 	# version
-	addon_version="0.1.0",
+	addon_version="0.2.0",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_("""Initial version"""),

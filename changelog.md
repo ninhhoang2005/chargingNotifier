@@ -1,3 +1,3 @@
-## Initial version
+## 0.2.0
 
-A add-on for NVDA that replaces the default voice announcements for AC power status changes with customizable sound notifications.
+**Voice and Sound**: Provides both audio cues and voice announcements.
