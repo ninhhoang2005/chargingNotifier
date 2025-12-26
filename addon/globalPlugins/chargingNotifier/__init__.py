@@ -31,11 +31,12 @@ class NotificationType(IntEnum):
 	"""Notification type for charging status changes."""
 	VOICE = 0
 	SOUND = 1
+	VOICE_AND_SOUND = 2
 
 
 # Configuration specification
 CONFSPEC = {
-	"notificationType": f"integer(default={NotificationType.VOICE}, min=0, max=1)",
+	"notificationType": f"integer(default={NotificationType.VOICE}, min=0, max=2)",
 }
 config.conf.spec["chargingNotifier"] = CONFSPEC
 
@@ -46,6 +47,15 @@ _originalReportPowerStatus = _powerTracking._reportPowerStatus
 def _getSoundPath(name: str) -> str:
 	"""Return the full path to a sound file."""
 	return os.path.join(os.path.dirname(__file__), "sounds", f"{name}.wav")
+
+
+def _playChargingSound(currentState: PowerState, previousState: PowerState) -> None:
+	"""Play the appropriate charging sound based on state change."""
+	if currentState != previousState:
+		if currentState == PowerState.AC_ONLINE:
+			nvwave.playWaveFile(_getSoundPath("connected"))
+		elif currentState == PowerState.AC_OFFLINE:
+			nvwave.playWaveFile(_getSoundPath("disconnected"))
 
 
 def _patchedReportPowerStatus(context: _ReportContext) -> None:
@@ -65,7 +75,7 @@ def _patchedReportPowerStatus(context: _ReportContext) -> None:
 		_originalReportPowerStatus(context)
 		return
 
-	# Sound mode: play appropriate sound
+	# Get current power status
 	status = _powerTracking._getPowerStatus()
 	if status is None:
 		return
@@ -73,14 +83,17 @@ def _patchedReportPowerStatus(context: _ReportContext) -> None:
 	currentState = status.ACLineStatus
 	previousState = _powerTracking._powerState
 
-	if currentState != previousState:
-		if currentState == PowerState.AC_ONLINE:
-			nvwave.playWaveFile(_getSoundPath("connected"))
-		elif currentState == PowerState.AC_OFFLINE:
-			nvwave.playWaveFile(_getSoundPath("disconnected"))
+	# Sound mode: play sound only
+	if notificationType == NotificationType.SOUND:
+		_playChargingSound(currentState, previousState)
+		_powerTracking._powerState = currentState
+		return
 
-	# Update power state
-	_powerTracking._powerState = currentState
+	# Voice and Sound mode: play sound first, then voice
+	if notificationType == NotificationType.VOICE_AND_SOUND:
+		_playChargingSound(currentState, previousState)
+		_originalReportPowerStatus(context)
+		return
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):

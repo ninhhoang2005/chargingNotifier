@@ -6,7 +6,7 @@ A add-on for NVDA that replaces the default voice announcements for AC power sta
 ## Features
 
 - **Sound Notifications**: Plays distinct sound effects when your device is connected to or disconnected from AC power.
-- **Configurable**: Choose between the default NVDA voice announcements or custom sound notifications.
+- **Configurable**: Choose between voice announcements, sound notifications, or both.
 
 
 ## Settings
@@ -17,7 +17,7 @@ The add-on adds a **Charging Notifier** category to NVDA's Settings dialog (`NVD
 
 - **Voice** (default): Uses NVDA's standard voice announcements for power status changes.
 - **Sound**: Plays audio cues instead of voice announcements.
-
+- **Voice and Sound**: Provides both audio cues and voice announcements.
 
 ## Author
 

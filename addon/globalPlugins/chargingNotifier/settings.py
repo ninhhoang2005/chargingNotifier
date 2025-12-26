@@ -28,9 +28,8 @@ class ChargingNotifierPanel(gui.settingsDialogs.SettingsPanel):
 
 		# Translators: Label for the notification type combo box.
 		label = _("Charging status notification type:")
-		# Translators: Voice notification option.
-		# Translators: Sound notification option.
-		choices = [_("Voice"), _("Sound")]
+		# Translators: Notification option.
+		choices = [_("Voice"), _("Sound"), _("Voice and Sound")]
 
 		self._notificationTypeChoice = helper.addLabeledControl(
 			label,
